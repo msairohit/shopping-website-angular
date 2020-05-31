@@ -7,13 +7,19 @@ import { AppComponent } from './app.component';
 import { SignUpComponent } from './sign-up/sign-up.component';
 import { TestComponent } from './test/test.component';
 import { HomeComponent } from './home/home.component';
+import { VegetablesComponent } from './vegetables/vegetables.component';
+import { CardComponent } from './card/card.component';
+import { CounterComponent } from './counter/counter.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     SignUpComponent,
     TestComponent,
-    HomeComponent
+    HomeComponent,
+    VegetablesComponent,
+    CardComponent,
+    CounterComponent
   ],
   imports: [
     BrowserModule,

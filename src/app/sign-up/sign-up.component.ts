@@ -60,7 +60,7 @@ export class SignUpComponent implements OnInit {
 
   onSubmit(value) {
     console.log(value);
-    this.router.navigate(['test']);
+    this.router.navigate(['vegetables']);
   }
 
 }

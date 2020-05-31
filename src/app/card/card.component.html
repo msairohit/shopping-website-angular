@@ -1,0 +1,43 @@
+<!-- <div class="card-group">
+    <div class="card">
+        <div>
+            <img class="card-img-top" src="assets/images/image.png" width="500" height="600" alt="Card image cap">
+        </div>
+        <div class="card-body">
+            <h5 class="card-title">Card title</h5>
+            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional
+                content. This content is a little bit longer.</p>
+            <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+        </div>
+    </div>
+</div> -->
+
+<div class="card col-sm-3">
+    <ul style="list-style-type: none;">
+        <li *ngFor="let data of parentData; index as i"
+            style="display: inline-block; margin-right: 20px;">
+            <div>
+                <img class="card-img-top" src="assets/images/image.png" alt="Card image cap">
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">{{data.name}}</h5>
+                <p class="card-text">{{data.description}}</p>
+                <p class="card-text"> Price : {{data.price | currency:'INR'}}</p>
+            </div>
+            <div class="card-footer">
+                <small class="text-muted">Last updated 3 mins ago</small>
+                <app-counter [parentData]="data.price" (messageEvent)="receiveMessage($event, data)"></app-counter>
+                <!-- <div class="input-group">
+            <span class="input-group-btn">
+                <button class="btn btn-secondary" type="button" aria-label="">Action</button>
+            </span>
+            <input type="text" class="form-control" name="name" id="name" placeholder="" aria-label="">
+        </div> -->
+                <div style="text-align: center;">
+                    <button class="btn btn-primary" [disabled]="isButtonDisabled(data)"
+                        (click)="addToCart(data)">{{buttonName}}</button>
+                </div>
+            </div>
+        </li>
+    </ul>
+</div>

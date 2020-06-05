@@ -8,7 +8,7 @@
 
     <input type="number" id="quantity" name="quantity" class="form-control input-number" [(ngModel)] = 'count' value="count"
         min="0.25" max="100" step="0.25"
-        onkeypress="return (event.charCode == 8 || event.charCode == 0) ? null : event.charCode >= 48 && event.charCode <= 57">
+        (keypress)="keyPressed($event)">
     <div class="input-group-prepend">
         <span class="input-group-text" id="inputGroupPrepend3">Kgs</span>
     </div>

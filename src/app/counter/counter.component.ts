@@ -10,13 +10,14 @@ export class CounterComponent implements OnInit {
 
   count: number = 1;
   @Input('parentData') parentData;
+  id : number = 0;
 
   @Output() messageEvent = new EventEmitter<number>();
 
   constructor() { }
 
   ngOnInit() {
-    this.count = this.parentData;
+    this.id = this.parentData;
   }
 
   increment(data) {
@@ -31,6 +32,13 @@ export class CounterComponent implements OnInit {
       this.count-=0.25;
       this.messageEvent.emit(this.count);
     }
+  }
+
+  keyPressed(event) {
+    let val = (event.charCode == 8 || event.charCode == 0) ? null : event.charCode >= 48 && event.charCode <= 57;
+    if (val)
+      this.messageEvent.emit(this.count);
+    return val;
   }
 
 }

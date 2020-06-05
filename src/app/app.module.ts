@@ -10,6 +10,8 @@ import { HomeComponent } from './home/home.component';
 import { VegetablesComponent } from './vegetables/vegetables.component';
 import { CardComponent } from './card/card.component';
 import { CounterComponent } from './counter/counter.component';
+import { ManageVegetablesComponent } from './manage-vegetables/manage-vegetables.component';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -19,13 +21,15 @@ import { CounterComponent } from './counter/counter.component';
     HomeComponent,
     VegetablesComponent,
     CardComponent,
-    CounterComponent
+    CounterComponent,
+    ManageVegetablesComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]

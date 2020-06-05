@@ -12,21 +12,21 @@
     </div>
 </div> -->
 
-<div class="card col-sm-3">
+<div >
     <ul style="list-style-type: none;">
         <li *ngFor="let data of parentData; index as i"
-            style="display: inline-block; margin-right: 20px;">
-            <div>
-                <img class="card-img-top" src="assets/images/image.png" alt="Card image cap">
+            style="display: inline-block; margin-right: 20px; border: ridge;">
+            <div style="text-align: center;">
+                <img class="card-img-top" style="width: 200px;" src="assets/images/image.png" alt="Card image cap">
             </div>
             <div class="card-body">
-                <h5 class="card-title">{{data.name}}</h5>
-                <p class="card-text">{{data.description}}</p>
+                <h5 class="card-title">{{data.vegetableName}}</h5>
+                <p class="card-text">{{data.vegetableDescription}}</p>
                 <p class="card-text"> Price : {{data.price | currency:'INR'}}</p>
             </div>
             <div class="card-footer">
                 <small class="text-muted">Last updated 3 mins ago</small>
-                <app-counter [parentData]="data.price" (messageEvent)="receiveMessage($event, data)"></app-counter>
+                <app-counter id = "app-counter-{{data.id}}" [parentData] = "data.id" (messageEvent)="receiveMessage($event, data)"></app-counter>
                 <!-- <div class="input-group">
             <span class="input-group-btn">
                 <button class="btn btn-secondary" type="button" aria-label="">Action</button>

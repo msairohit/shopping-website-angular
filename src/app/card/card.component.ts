@@ -1,7 +1,8 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, ViewChildren, QueryList } from '@angular/core';
 import { Vegetable } from '../vegetable';
 import { LocalStorageService } from '../local-storage.service';
 import { element } from 'protractor';
+import { CounterComponent } from '../counter/counter.component';
 
 @Component({
   selector: 'app-card',
@@ -20,6 +21,9 @@ export class CardComponent implements OnInit {
   
   @Input('parentData') parentData: Vegetable[];
 
+  @ViewChild(CounterComponent, {static: false}) counterComponent;
+  @ViewChildren(CounterComponent) counterComponentList : QueryList<CounterComponent>;
+
   constructor(private localStorageService : LocalStorageService) { }
 
   ngOnInit() {
@@ -35,6 +39,7 @@ export class CardComponent implements OnInit {
   addOrUpdateCart(data) {
     //TODO : update store functionality to keep track of current situation.
     console.log({data});
+    this.getQuantity(data);
     console.log("add to cart called, need to write rest call to save the data");
     if(!this.localStorageService.vegetableAlreadyExists(data)) {//Add to cart functionality
       this.localStorageService.addToLocalStorage(data);
@@ -61,10 +66,16 @@ export class CardComponent implements OnInit {
     (document.getElementById("btn-"+data.id) as any).disabled = false;
   }
 
+  getQuantity(data) {
+    console.log(this.counterComponent.count);
+    console.log(this.counterComponentList.toArray());
+    console.log(this.counterComponentList.filter(item => item.id == data.id));
+  }
+
   receiveMessage(event, data) {
     console.log(event);
     console.log({data});
-    this.childMessage = event;
+    // this.childMessage = event;
     // data.price = event;
 
     if (this.localStorageService.vegetableAlreadyExists(data) && document.getElementById("btn-"+data.id).innerHTML == this.addToCartString) {

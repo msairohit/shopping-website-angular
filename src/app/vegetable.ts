@@ -3,4 +3,5 @@ export class Vegetable {
     name : string;
     description : string;
     price : number;
+    quantity : number;
 };

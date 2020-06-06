@@ -3,6 +3,8 @@ import { Vegetable } from '../vegetable';
 import { LocalStorageService } from '../local-storage.service';
 import { element } from 'protractor';
 import { CounterComponent } from '../counter/counter.component';
+import { RestService } from '../rest.service';
+import { Cart } from '../cart';
 
 @Component({
   selector: 'app-card',
@@ -24,10 +26,48 @@ export class CardComponent implements OnInit {
   @ViewChild(CounterComponent, {static: false}) counterComponent;
   @ViewChildren(CounterComponent) counterComponentList : QueryList<CounterComponent>;
 
-  constructor(private localStorageService : LocalStorageService) { }
+  constructor(private localStorageService : LocalStorageService, private restService : RestService) { }
 
   ngOnInit() {
-   
+  }
+
+  ngAfterViewInit() {
+    /* var div=document.getElementById("div");
+var a=div.querySelectorAll('button');
+console.log(Object.values(a)) */
+    this.localStorageService.getFromLocalStorage().forEach(element => {
+      console.log(element);
+      this.initializeButton(element);
+      /* var counter = this.counterComponentList.filter(item => item.id == element.id);
+      if (counter.length > 0) {
+        counter[0].count = element.quantity;
+      } */
+    });
+
+  }
+
+  initialize() {
+    this.localStorageService.getFromLocalStorage().forEach(element => {
+      console.log(element);
+      this.initializeButton(element);
+      /* var counter = this.counterComponentList.filter(item => item.id == element.id);
+      if (counter.length > 0) {
+        counter[0].count = element.quantity;
+      } */
+    });
+  }
+  
+  initializeButton(data : Vegetable) {
+    this.changeButtonStatus(data);
+    this.changeButtonText(data);
+  }
+
+  changeButtonStatus(data : Vegetable) {
+    (document.getElementById("btn-"+data.id) as any).disabled = data.buttonStatus;
+  }
+
+  changeButtonText(data : Vegetable) {
+    document.getElementById("btn-" + data.id).innerHTML = data.buttonText;
   }
 
   isButtonDisabled(data) {
@@ -38,18 +78,42 @@ export class CardComponent implements OnInit {
 
   addOrUpdateCart(data) {
     //TODO : update store functionality to keep track of current situation.
-    console.log({data});
-    this.getQuantity(data);
+    console.log({ data });
     console.log("add to cart called, need to write rest call to save the data");
-    if(!this.localStorageService.vegetableAlreadyExists(data)) {//Add to cart functionality
-      this.localStorageService.addToLocalStorage(data);
-      console.log("item added to cart");
-      this.localStorageService.printCartItems();
-      this.disableButton(data);
-    } else {//Update cart functionality
-      //call update rest call.
-      this.disableButton(data);
+    var quantity = this.getQuantity(data);
+    data.quantity = quantity;
+    if (quantity == 0) {
+      console.log("quantity not correct");
+    } else {
+      let cart: Cart = new Cart();
+      cart.quantity = quantity;
+      cart.customerName = this.localStorageService.getUserName();
+      cart.productName = data.vegetableName;
+      cart.costOfEachItem = data.price;
 
+      /* if (!this.localStorageService.vegetableAlreadyExists(data)) {//Add to cart functionality
+        this.localStorageService.addToLocalStorage(data);
+        console.log("item added to cart");
+        this.restService.post("http://localhost:8080/cart", cart).subscribe(
+          (data) => {
+            console.log(data);
+          }, (error) => {
+            console.error(error);
+          });
+        this.disableButton(data);
+      } else {//Update cart functionality */
+        this.restService.put("http://localhost:8080/cart", cart).subscribe(
+          (data) => {
+            console.log(data);
+          }, (error) => {
+            console.error(error);
+          });
+        this.disableButton(data);
+        data.buttonStatus = this.getButtonStatus(data);
+        data.buttonText = this.getButtonText(data);
+        this.localStorageService.addToLocalStorage(data);
+
+      // }
     }
   }
 
@@ -66,15 +130,27 @@ export class CardComponent implements OnInit {
     (document.getElementById("btn-"+data.id) as any).disabled = false;
   }
 
+  getButtonStatus(data) {
+    return (document.getElementById("btn-"+data.id) as any).disabled;
+  }
+
+  getButtonText(data) {
+    return (document.getElementById("btn-"+data.id) as any).innerHTML;
+  }
+
   getQuantity(data) {
     console.log(this.counterComponent.count);
     console.log(this.counterComponentList.toArray());
-    console.log(this.counterComponentList.filter(item => item.id == data.id));
+    var counter =  this.counterComponentList.filter(item => item.id == data.id);
+    if(counter.length > 0) {
+      return counter[0].count;
+    }
+    return 0;
   }
 
   receiveMessage(event, data) {
-    console.log(event);
-    console.log({data});
+    // console.log(event);
+    // console.log({data});
     // this.childMessage = event;
     // data.price = event;
 

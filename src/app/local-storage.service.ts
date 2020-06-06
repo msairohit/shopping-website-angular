@@ -6,15 +6,24 @@ import { Vegetable } from './vegetable';
 })
 export class LocalStorageService {
 
-  constructor() { }
+  //TODO: get login username and store in local storage.
+  constructor() {
+    localStorage.setItem("userName", "sai");
+   }
+
+   getUserName() {
+     return localStorage.getItem("userName") || "DEFAULT";
+   }
 
   addToLocalStorage(vegetable: Vegetable) {
     var cartItems = this.getFromLocalStorage() || [];
-    cartItems.push(vegetable);
-    localStorage.setItem("cartItems", JSON.stringify(cartItems));
+    if(!this.vegetableAlreadyExists(vegetable)) {
+      cartItems.push(vegetable);
+      localStorage.setItem("cartItems", JSON.stringify(cartItems));
+    }
   }
 
-  getFromLocalStorage() {
+  getFromLocalStorage() : Vegetable[]{
     return JSON.parse(localStorage.getItem("cartItems")) || [];
   }
 

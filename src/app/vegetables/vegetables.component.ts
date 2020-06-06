@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Vegetable } from '../vegetable';
 import { LocalStorageService } from '../local-storage.service';
 import { RestService } from '../rest.service';
+import { CardComponent } from '../card/card.component';
 
 @Component({
   selector: 'app-vegetables',
@@ -11,11 +12,12 @@ import { RestService } from '../rest.service';
 export class VegetablesComponent implements OnInit {
 
   allData;
+  @ViewChild(CardComponent, {static: false}) child : CardComponent;
 
   constructor(private localStorageService: LocalStorageService, private restService : RestService) { }
 
   ngOnInit() {
-    localStorage.clear();
+    // localStorage.clear();
     this.allData = [];
 
     /* let vegetable1 = new Vegetable();
@@ -50,6 +52,17 @@ export class VegetablesComponent implements OnInit {
 
     console.log("cart items initiated");
     this.localStorageService.printCartItems();
+  }
+
+  
+  ngAfterViewInit() {
+    // child is set
+    setTimeout(this.test, 5000);
+    // this.child.initialize();
+  }
+
+  test() {
+    this.child.initialize();
   }
 
 }

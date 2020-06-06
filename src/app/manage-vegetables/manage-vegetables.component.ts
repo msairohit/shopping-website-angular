@@ -104,4 +104,15 @@ export class ManageVegetablesComponent implements OnInit {
     this.updateDisabled = true;
   }
 
+  onGetCartDetails() {
+    this.restService.get("http://localhost:8080/cart/sai")
+      .subscribe(
+        (data) => {
+          console.log(data);
+        },
+        (error) => {
+          console.error(error);
+        });
+  }
+
 }

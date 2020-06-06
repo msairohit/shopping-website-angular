@@ -1,7 +1,9 @@
 export class Vegetable {
     id : number;
-    name : string;
-    description : string;
+    vegetableName : string;
+    vegetabledescription : string;
     price : number;
     quantity : number;
+    buttonStatus : boolean;
+    buttonText : string;
 };

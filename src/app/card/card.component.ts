@@ -32,29 +32,41 @@ export class CardComponent implements OnInit {
   }
 
   ngAfterViewInit() {
-    /* var div=document.getElementById("div");
-var a=div.querySelectorAll('button');
-console.log(Object.values(a)) */
-    this.localStorageService.getFromLocalStorage().forEach(element => {
-      console.log(element);
-      this.initializeButton(element);
-      /* var counter = this.counterComponentList.filter(item => item.id == element.id);
-      if (counter.length > 0) {
-        counter[0].count = element.quantity;
-      } */
-    });
-
+    var cartData: Cart[];
+    this.restService.get("http://localhost:8080/cart/sai")
+      .subscribe(
+        (data: Cart[]) => {
+          cartData = data;
+          console.log(cartData);
+          this.parentData.forEach(parent => {
+            var cart = [];
+            cart = cartData.filter(cart => cart.productName == parent.vegetableName);
+            if (cart.length > 0) {
+              console.log("already exists", cart);
+              parent.quantity = cart[0].quantity;
+              parent.buttonStatus = true;
+              parent.buttonText = this.addToCartString;
+            } else {
+              parent.quantity = 0;
+              parent.buttonStatus = false;
+              parent.buttonText = this.addToCartString;
+            }
+          })
+        },
+        (error) => {
+          console.error(error);
+        });
   }
 
   initialize() {
-    this.localStorageService.getFromLocalStorage().forEach(element => {
-      console.log(element);
-      this.initializeButton(element);
-      /* var counter = this.counterComponentList.filter(item => item.id == element.id);
-      if (counter.length > 0) {
-        counter[0].count = element.quantity;
-      } */
-    });
+    // this.localStorageService.getFromLocalStorage().forEach(element => {
+    /*    console.log(element);
+       this.initializeButton(element); */
+    /* var counter = this.counterComponentList.filter(item => item.id == element.id);
+    if (counter.length > 0) {
+      counter[0].count = element.quantity;
+    } */
+    // });
   }
   
   initializeButton(data : Vegetable) {
@@ -70,9 +82,16 @@ console.log(Object.values(a)) */
     document.getElementById("btn-" + data.id).innerHTML = data.buttonText;
   }
 
-  isButtonDisabled(data) {
+/*   isButtonDisabled(data) {
     console.log(this.localStorageService.vegetableAlreadyExists(data));
     return this.localStorageService.vegetableAlreadyExists(data);
+  } */
+
+  removeItemFromCart(data) {//TODO: implement method
+    //delete from db.
+    //change quantity to 0.
+    //enable button.
+    //change text to add to cart.
   }
 
 

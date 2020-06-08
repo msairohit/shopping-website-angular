@@ -87,13 +87,22 @@
     </div>
 
     <div *ngIf="showTable">
-        <table class="table table-dark">
+        <div style="text-align: end;">
+            toggle dark mode
+            <label class="switch">
+                <input type="checkbox" [(ngModel)]="theCheckbox">
+                <span class="slider round"></span>
+              </label>
+        </div>
+        <table  [ngClass] = "theCheckbox ? 'table table-striped table-dark' : 'table table-striped'">
             <thead>
                 <tr>
                     <th scope="col">#</th>
                     <th scope="col">NAME</th>
                     <th scope="col">DESCRIPTION</th>
                     <th scope="col">PRICE</th>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
                 </tr>
             </thead>
             <tbody>

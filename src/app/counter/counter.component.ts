@@ -8,7 +8,7 @@ import { Vegetable } from '../vegetable';
 })
 export class CounterComponent implements OnInit {
 
-  count: number = 1;
+  count: number;
   @Input('parentData') parentData;
   id : number = 0;
 
@@ -17,7 +17,22 @@ export class CounterComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-    this.id = this.parentData;
+  }
+
+  ngAfterContentChecked() {
+    console.log("count", this.count);
+    console.log("parent data quantity", this.parentData.quantity);
+    if(this.count == undefined) {
+      this.id = this.parentData.id;
+      // console.log(this.parentData);
+      this.count = this.parentData.quantity;
+    }
+    /* if(this.count != this.parentData.quantity) {
+    } else {
+      this.id = this.parentData.id;
+      // console.log(this.parentData);
+      this.count = this.parentData.quantity;
+    } */
   }
 
   increment(data) {

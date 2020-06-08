@@ -54,15 +54,4 @@ export class VegetablesComponent implements OnInit {
     this.localStorageService.printCartItems();
   }
 
-  
-  ngAfterViewInit() {
-    // child is set
-    setTimeout(this.test, 5000);
-    // this.child.initialize();
-  }
-
-  test() {
-    this.child.initialize();
-  }
-
 }

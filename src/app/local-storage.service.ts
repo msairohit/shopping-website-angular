@@ -30,7 +30,7 @@ export class LocalStorageService {
   printCartItems() {
     if (this.getFromLocalStorage())
       this.getFromLocalStorage().forEach(element => {
-        console.log(element.vegetableName);
+        console.log(element.name);
       });
   }
 
@@ -39,7 +39,7 @@ export class LocalStorageService {
     let cartItems = this.getFromLocalStorage();
     for(let index = 0; index < cartItems.length; index++) {
       const element = cartItems[index];
-      if (element.vegetableName == data.vegetableName) {
+      if (element.name == data.name) {
         alreadyExists = true;
         break;
       }

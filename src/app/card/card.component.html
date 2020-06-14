@@ -26,13 +26,13 @@
                 <img class="card-img-top" style="width: 200px;" src="assets/images/image.png" alt="Card image cap">
             </div>
             <div class="card-body">
-                <h5 class="card-title">{{data.vegetableName}}</h5>
+                <h5 class="card-title">{{data.name}}</h5>
                 <p class="card-text">{{data.vegetableDescription}}</p>
-                <p class="card-text"> Price : {{data.price | currency:'INR'}}</p>
+                <p class="card-text"> Price : {{data.price || data.costOfEachItem | currency:'INR'}}</p>
             </div>
             <div class="card-footer">
                 <small class="text-muted">Last updated 3 mins ago</small>
-                <app-counter id = "app-counter-{{data.id}}" [parentData] = "data" (messageEvent)="receiveMessage($event, data)"></app-counter>
+                <app-counter id = "app-counter-{{data.name}}" [parentData] = "data" (messageEvent)="receiveMessage($event, data)"></app-counter>
                 <!-- <div class="input-group">
             <span class="input-group-btn">
                 <button class="btn btn-secondary" type="button" aria-label="">Action</button>
@@ -40,8 +40,10 @@
             <input type="text" class="form-control" name="name" id="name" placeholder="" aria-label="">
         </div> -->
                 <div style="text-align: center;">
-                    <button id = "btn-{{data.id}}" class="btn btn-primary" (click)="addOrUpdateCart(data)" [disabled] = "data.buttonStatus">{{data.buttonText}}</button>
-                    <button id = "btn-remove-{{data.id}}" class="btn btn-danger" (click)="removeItemFromCart(data)" style="margin-left: 10px;">
+                    <button  *ngIf = "data.price" id = "btn-{{data.name}}" class="btn btn-primary" (click)="addOrUpdateCart(data)" [disabled] = "data.buttonStatus">{{data.buttonText}}</button>
+                    <label *ngIf = "data.totalCost">  Total cost : </label>
+                        <label *ngIf = "data.totalCost" id = "totalCostLabel-{{data.name}}">{{data.totalCost}}</label>
+                    <button id = "btn-remove-{{data.name}}" class="btn btn-danger" (click)="removeItemFromCart(data)" style="margin-left: 10px;">
                         <svg class="bi bi-trash-fill" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                             <path fill-rule="evenodd" d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5a.5.5 0 0 0-1 0v7a.5.5 0 0 0 1 0v-7z"/>
                           </svg>

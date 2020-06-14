@@ -1,6 +1,6 @@
 export class Vegetable {
     id : number;
-    vegetableName : string;
+    name : string;
     vegetabledescription : string;
     price : number;
     quantity : number;

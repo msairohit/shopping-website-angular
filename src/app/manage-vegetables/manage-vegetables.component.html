@@ -82,9 +82,6 @@
 
         </div>
     </form>
-    <div>
-        <button class="btn btn-success" (click) = "onGetCartDetails()">get cart details</button>
-    </div>
 
     <div *ngIf="showTable">
         <div style="text-align: end;">
@@ -108,7 +105,7 @@
             <tbody>
                 <tr *ngFor="let vegetable of vegetables; index as i">
                     <th>{{i}}</th>
-                    <td>{{vegetable.vegetableName}}</td>
+                    <td>{{vegetable.name}}</td>
                     <td>{{vegetable.vegetableDescription}}</td>
                     <td>{{vegetable.price}}</td>
                     <td>

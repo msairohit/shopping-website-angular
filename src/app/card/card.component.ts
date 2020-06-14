@@ -1,10 +1,11 @@
-import { Component, OnInit, Input, ViewChild, ViewChildren, QueryList } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, ViewChildren, QueryList, Output, EventEmitter } from '@angular/core';
 import { Vegetable } from '../vegetable';
 import { LocalStorageService } from '../local-storage.service';
 import { element } from 'protractor';
 import { CounterComponent } from '../counter/counter.component';
 import { RestService } from '../rest.service';
 import { Cart } from '../cart';
+import { CommonService } from '../common.service';
 
 @Component({
   selector: 'app-card',
@@ -20,18 +21,24 @@ export class CardComponent implements OnInit {
   updateCartString = "Update cart";
   buttonName: string = this.addToCartString;
 
+  cartData;
+
   
-  @Input('parentData') parentData: Vegetable[];
+  @Input('parentData') parentData: any[];
+
+  @Output() totalCostFromChild = new EventEmitter<number>();
 
   @ViewChild(CounterComponent, {static: false}) counterComponent;
   @ViewChildren(CounterComponent) counterComponentList : QueryList<CounterComponent>;
 
-  constructor(private localStorageService : LocalStorageService, private restService : RestService) { }
+  constructor(private localStorageService : LocalStorageService, private restService : RestService
+    , private commonService : CommonService) { }
 
   ngOnInit() {
   }
 
   ngAfterViewInit() {
+    this.commonService.showSpinner();
     var cartData: Cart[];
     this.restService.get("http://localhost:8080/cart/sai")
       .subscribe(
@@ -40,7 +47,7 @@ export class CardComponent implements OnInit {
           console.log(cartData);
           this.parentData.forEach(parent => {
             var cart = [];
-            cart = cartData.filter(cart => cart.productName == parent.vegetableName);
+            cart = cartData.filter(cart => cart.name == parent.name);
             if (cart.length > 0) {
               console.log("already exists", cart);
               parent.quantity = cart[0].quantity;
@@ -52,46 +59,59 @@ export class CardComponent implements OnInit {
               parent.buttonText = this.addToCartString;
             }
           })
+          this.cartData = data;
         },
         (error) => {
           console.error(error);
+          this.commonService.hideSpinner();
         });
+        this.commonService.hideSpinner();
   }
 
-  initialize() {
-    // this.localStorageService.getFromLocalStorage().forEach(element => {
-    /*    console.log(element);
-       this.initializeButton(element); */
-    /* var counter = this.counterComponentList.filter(item => item.id == element.id);
-    if (counter.length > 0) {
-      counter[0].count = element.quantity;
-    } */
-    // });
-  }
-  
-  initializeButton(data : Vegetable) {
-    this.changeButtonStatus(data);
-    this.changeButtonText(data);
-  }
-
-  changeButtonStatus(data : Vegetable) {
-    (document.getElementById("btn-"+data.id) as any).disabled = data.buttonStatus;
+  updateCartDataInLocalVariable () {
+    this.restService.get("http://localhost:8080/cart/sai").subscribe(
+      (data : any) => {
+        console.log(data);
+        if(this.parentData[0].totalCost) {
+          this.parentData = data;
+        }
+        this.cartData = data;
+      },
+      (error) => {
+        console.error("something wrong");
+      }
+    );
   }
 
-  changeButtonText(data : Vegetable) {
-    document.getElementById("btn-" + data.id).innerHTML = data.buttonText;
-  }
-
-/*   isButtonDisabled(data) {
-    console.log(this.localStorageService.vegetableAlreadyExists(data));
-    return this.localStorageService.vegetableAlreadyExists(data);
-  } */
 
   removeItemFromCart(data) {//TODO: implement method
     //delete from db.
-    //change quantity to 0.
-    //enable button.
-    //change text to add to cart.
+    console.log(data);
+    var url = "http://localhost:8080/cart/";
+    var uri = data.name;
+    this.restService.delete(url + uri).subscribe(
+      (data) => {
+        console.log("successfully deleted ", data);
+        this.updateCartDataInLocalVariable();
+      },
+      (error) => {
+        console.error("something fishy, not deleted!! ", error);
+      }
+      );
+      
+      //change quantity to 0.
+      var counter =  this.counterComponentList.filter(item => item.id == data.id);
+      if(counter.length > 0) {
+        counter[0].count = 0;
+      }
+      
+      //enable button.
+      //change text to add to cart.
+      if (!data.customerName) {
+        this.enableButton(data);
+        document.getElementById("btn-" + data.name).innerHTML = this.addToCartString;
+      }
+
   }
 
 
@@ -102,13 +122,18 @@ export class CardComponent implements OnInit {
     var quantity = this.getQuantity(data);
     data.quantity = quantity;
     if (quantity == 0) {
+      alert("Select a quantity, cant deliver empty basket!!");
       console.log("quantity not correct");
     } else {
       let cart: Cart = new Cart();
-      cart.quantity = quantity;
-      cart.customerName = this.localStorageService.getUserName();
-      cart.productName = data.vegetableName;
-      cart.costOfEachItem = data.price;
+      if(data.customerName) {
+        cart = data;
+      } else {
+        cart.quantity = quantity;
+        cart.customerName = this.localStorageService.getUserName();
+        cart.name = data.name;
+        cart.costOfEachItem = data.price;
+      }
 
       /* if (!this.localStorageService.vegetableAlreadyExists(data)) {//Add to cart functionality
         this.localStorageService.addToLocalStorage(data);
@@ -122,39 +147,52 @@ export class CardComponent implements OnInit {
         this.disableButton(data);
       } else {//Update cart functionality */
         this.restService.put("http://localhost:8080/cart", cart).subscribe(
-          (data) => {
+          (data : any) => {
             console.log(data);
+            if(this.parentData[0].totalCost) {
+
+              document.getElementById('totalCostLabel-' + data.name).innerHTML = data.totalCost;
+              var totalCartValue : number = 0;
+              for (let index = 0; index < this.parentData.length; index++) {
+                var val = document.getElementById('totalCostLabel-' + data.name).innerHTML;
+                totalCartValue += parseFloat(val);
+              }
+  
+              this.totalCostFromChild.emit(totalCartValue);
+            }
           }, (error) => {
             console.error(error);
           });
+      if (!data.customerName) {
         this.disableButton(data);
         data.buttonStatus = this.getButtonStatus(data);
         data.buttonText = this.getButtonText(data);
+      }
         this.localStorageService.addToLocalStorage(data);
-
+        this.updateCartDataInLocalVariable();
       // }
     }
   }
 
   toggleButtonName(data) {
-    document.getElementById("btn-" + data.id).innerHTML =
-      document.getElementById("btn-" + data.id).innerHTML == this.addToCartString ? this.updateCartString : this.addToCartString;
+    document.getElementById("btn-" + data.name).innerHTML =
+      document.getElementById("btn-" + data.name).innerHTML == this.addToCartString ? this.updateCartString : this.addToCartString;
   }
 
   disableButton(data) {
-    (document.getElementById("btn-"+data.id) as any).disabled = true;
+    (document.getElementById("btn-"+data.name) as any).disabled = true;
   }
 
   enableButton(data) {
-    (document.getElementById("btn-"+data.id) as any).disabled = false;
+    (document.getElementById("btn-"+data.name) as any).disabled = false;
   }
 
   getButtonStatus(data) {
-    return (document.getElementById("btn-"+data.id) as any).disabled;
+    return (document.getElementById("btn-"+data.name) as any).disabled;
   }
 
   getButtonText(data) {
-    return (document.getElementById("btn-"+data.id) as any).innerHTML;
+    return (document.getElementById("btn-"+data.name) as any).innerHTML;
   }
 
   getQuantity(data) {
@@ -167,21 +205,38 @@ export class CardComponent implements OnInit {
     return 0;
   }
 
+  itemExistsInCart(data) {
+    var alreadyExists = false;
+    for(let index = 0; index < this.cartData.length; index++) {
+      const element = this.cartData[index];
+      if (element.name == data.name) {
+        alreadyExists = true;
+        break;
+      }
+    }
+    return alreadyExists;
+  }
+
   receiveMessage(event, data) {
-    // console.log(event);
-    // console.log({data});
+    console.log(event);
+    console.log({ data });
     // this.childMessage = event;
     // data.price = event;
+    if (this.parentData[0].customerName) {
+      this.addOrUpdateCart(data);
+    } else {
+      // if (this.localStorageService.vegetableAlreadyExists(data) && document.getElementById("btn-" + data.id).innerHTML == this.addToCartString) {
+      if ( this.itemExistsInCart(data) && document.getElementById("btn-" + data.name).innerHTML == this.addToCartString) {
+        // this.buttonName = this.updateCartString;//TODO : based on this button name change the create or update functionlaity.
+        this.toggleButtonName(data);
+        this.enableButton(data);
+      }
 
-    if (this.localStorageService.vegetableAlreadyExists(data) && document.getElementById("btn-"+data.id).innerHTML == this.addToCartString) {
-      // this.buttonName = this.updateCartString;//TODO : based on this button name change the create or update functionlaity.
-      this.toggleButtonName(data);
-      this.enableButton(data);
-    }
-
-    if (this.localStorageService.vegetableAlreadyExists(data) && document.getElementById("btn-"+data.id).innerHTML == this.updateCartString) {
-      // this.buttonName = this.updateCartString;//TODO : based on this button name change the create or update functionlaity.
-      this.enableButton(data);
+      // if (this.localStorageService.vegetableAlreadyExists(data) && document.getElementById("btn-" + data.id).innerHTML == this.updateCartString) {
+      if (this.itemExistsInCart(data) && document.getElementById("btn-" + data.name).innerHTML == this.updateCartString) {
+        // this.buttonName = this.updateCartString;//TODO : based on this button name change the create or update functionlaity.
+        this.enableButton(data);
+      }
     }
   }
 

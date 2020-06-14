@@ -19,4 +19,9 @@ export class RestService {
   put(url, body) {
     return this.httpClient.put(url, body);
   }
+
+  delete(url) {
+    console.log(url);
+    return this.httpClient.delete(url);
+  }
 }

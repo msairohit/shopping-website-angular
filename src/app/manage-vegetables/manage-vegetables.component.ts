@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { RestService } from '../rest.service';
+import { CommonService } from '../common.service';
 
 @Component({
   selector: 'app-manage-vegetables',
@@ -15,7 +16,8 @@ export class ManageVegetablesComponent implements OnInit {
   showTable : boolean = false;
   updateDisabled : boolean = true;
 
-  constructor(private formBuilder: FormBuilder, private httpClient: HttpClient, private restService : RestService) { }
+  constructor(private formBuilder: FormBuilder, private httpClient: HttpClient, private restService : RestService,
+    private commonService : CommonService) { }
 
   ngOnInit() {
     this.vegetablesForm = this.formBuilder.group({
@@ -30,12 +32,16 @@ export class ManageVegetablesComponent implements OnInit {
   }
 
   onSearch() {
+    console.log(!this.vegetables);
+      // this.showSpinner = true;
+      this.commonService.showSpinner();
     this.restService.get("http://localhost:8080/vegetables/getAll").subscribe(
       (data) => {
         console.log(data);
         if(data) {
           this.vegetables = data;
           this.showTable = true;
+          this.commonService.hideSpinner();
         }
       },
       (error) => {

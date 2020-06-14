@@ -20,8 +20,8 @@ export class CounterComponent implements OnInit {
   }
 
   ngAfterContentChecked() {
-    console.log("count", this.count);
-    console.log("parent data quantity", this.parentData.quantity);
+    // console.log("count", this.count);
+    // console.log("parent data quantity", this.parentData.quantity);
     if(this.count == undefined) {
       this.id = this.parentData.id;
       // console.log(this.parentData);

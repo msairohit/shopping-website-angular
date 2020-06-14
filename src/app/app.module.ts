@@ -12,6 +12,9 @@ import { CardComponent } from './card/card.component';
 import { CounterComponent } from './counter/counter.component';
 import { ManageVegetablesComponent } from './manage-vegetables/manage-vegetables.component';
 import { HttpClientModule } from '@angular/common/http';
+import { CartComponent } from './cart/cart.component';
+import { NgxSpinnerModule } from "ngx-spinner";
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -22,14 +25,17 @@ import { HttpClientModule } from '@angular/common/http';
     VegetablesComponent,
     CardComponent,
     CounterComponent,
-    ManageVegetablesComponent
+    ManageVegetablesComponent,
+    CartComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
     ReactiveFormsModule,
-    HttpClientModule
+    HttpClientModule,
+    NgxSpinnerModule,
+    BrowserAnimationsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

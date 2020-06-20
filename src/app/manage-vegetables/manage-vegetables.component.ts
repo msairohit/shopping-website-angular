@@ -82,7 +82,7 @@ export class ManageVegetablesComponent implements OnInit {
   onTableEditClicked(data) {
     this.updateDisabled = false;
     // this.vegetablesForm.controls['vegetableName'].enabled;
-    this.vegetablesForm.controls['vegetableName'].setValue(data.vegetableName);
+    this.vegetablesForm.controls['vegetableName'].setValue(data.name);
     this.vegetablesForm.controls['vegetableName'].disable();
     this.vegetablesForm.controls['vegetableDescription'].setValue(data.vegetableDescription);
     this.vegetablesForm.controls['price'].setValue(data.price); 
@@ -111,7 +111,7 @@ export class ManageVegetablesComponent implements OnInit {
   }
 
   onGetCartDetails() {
-    this.restService.get("http://localhost:8080/cart/sai")
+    this.restService.get("http://localhost:8080/cart/" + localStorage.getItem('userName'))
       .subscribe(
         (data) => {
           console.log(data);

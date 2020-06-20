@@ -15,6 +15,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { CartComponent } from './cart/cart.component';
 import { NgxSpinnerModule } from "ngx-spinner";
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { LoginSignupTestComponent } from './login-signup-test/login-signup-test.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     CardComponent,
     CounterComponent,
     ManageVegetablesComponent,
-    CartComponent
+    CartComponent,
+    LoginSignupTestComponent
   ],
   imports: [
     BrowserModule,

@@ -1,6 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Vegetable } from '../vegetable';
-import { LocalStorageService } from '../local-storage.service';
 import { RestService } from '../rest.service';
 import { CardComponent } from '../card/card.component';
 
@@ -14,28 +13,11 @@ export class VegetablesComponent implements OnInit {
   allData;
   @ViewChild(CardComponent, {static: false}) child : CardComponent;
 
-  constructor(private localStorageService: LocalStorageService, private restService : RestService) { }
+  constructor(private restService : RestService) { }
 
   ngOnInit() {
-    // localStorage.clear();
     this.allData = [];
 
-    /* let vegetable1 = new Vegetable();
-    vegetable1.id = 2;
-    vegetable1.name = "carrot1";
-    vegetable1.description = "its red and good for eyes";
-    vegetable1.price = 20;
-
-    let vegetable2 = new Vegetable();
-    vegetable2.id = 3;
-    vegetable2.name = "carrot2";
-    vegetable2.description = "its red and good for eyes";
-    vegetable2.price = 20;
-
-    // this.localStorageService.addToLocalStorage(vegetable1);
-    // this.localStorageService.addToLocalStorage(vegetable2);
-    this.allData.push(vegetable1);
-    this.allData.push(vegetable2); */
     this.restService.get("http://localhost:8080/vegetables/getAll").subscribe(
       (data) => {
         console.log(data);
@@ -48,10 +30,7 @@ export class VegetablesComponent implements OnInit {
         console.error(error);
       }
     );
-    console.log(this.allData);
 
-    console.log("cart items initiated");
-    this.localStorageService.printCartItems();
   }
 
 }

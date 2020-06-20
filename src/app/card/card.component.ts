@@ -22,6 +22,7 @@ export class CardComponent implements OnInit {
   buttonName: string = this.addToCartString;
 
   cartData;
+  totalCost : number = 0;
 
   
   @Input('parentData') parentData: any[];
@@ -35,12 +36,17 @@ export class CardComponent implements OnInit {
     , private commonService : CommonService) { }
 
   ngOnInit() {
+    this.commonService.showSpinner();
+    setTimeout(() => {
+      this.myNgAfterViewInit();
+      this.commonService.hideSpinner();
+    }, 1000);
   }
 
-  ngAfterViewInit() {
+  myNgAfterViewInit() {
     this.commonService.showSpinner();
     var cartData: Cart[];
-    this.restService.get("http://localhost:8080/cart/sai")
+    this.restService.get("http://localhost:8080/cart/" + this.localStorageService.getUserName())
       .subscribe(
         (data: Cart[]) => {
           cartData = data;
@@ -52,7 +58,7 @@ export class CardComponent implements OnInit {
               console.log("already exists", cart);
               parent.quantity = cart[0].quantity;
               parent.buttonStatus = true;
-              parent.buttonText = this.addToCartString;
+              parent.buttonText = this.updateCartString;
             } else {
               parent.quantity = 0;
               parent.buttonStatus = false;
@@ -69,11 +75,16 @@ export class CardComponent implements OnInit {
   }
 
   updateCartDataInLocalVariable () {
-    this.restService.get("http://localhost:8080/cart/sai").subscribe(
+    this.restService.get("http://localhost:8080/cart/" + this.localStorageService.getUserName()).subscribe(
       (data : any) => {
         console.log(data);
         if(this.parentData[0].totalCost) {
           this.parentData = data;
+          this.totalCost = 0;
+        data.forEach(element => {
+          this.totalCost += element.totalCost;
+        });
+        this.updateTotalCost();
         }
         this.cartData = data;
       },
@@ -84,7 +95,7 @@ export class CardComponent implements OnInit {
   }
 
 
-  removeItemFromCart(data) {//TODO: implement method
+  removeItemFromCart(data) {
     //delete from db.
     console.log(data);
     var url = "http://localhost:8080/cart/";
@@ -135,31 +146,11 @@ export class CardComponent implements OnInit {
         cart.costOfEachItem = data.price;
       }
 
-      /* if (!this.localStorageService.vegetableAlreadyExists(data)) {//Add to cart functionality
-        this.localStorageService.addToLocalStorage(data);
-        console.log("item added to cart");
-        this.restService.post("http://localhost:8080/cart", cart).subscribe(
-          (data) => {
-            console.log(data);
-          }, (error) => {
-            console.error(error);
-          });
-        this.disableButton(data);
-      } else {//Update cart functionality */
         this.restService.put("http://localhost:8080/cart", cart).subscribe(
           (data : any) => {
             console.log(data);
-            if(this.parentData[0].totalCost) {
-
-              document.getElementById('totalCostLabel-' + data.name).innerHTML = data.totalCost;
-              var totalCartValue : number = 0;
-              for (let index = 0; index < this.parentData.length; index++) {
-                var val = document.getElementById('totalCostLabel-' + data.name).innerHTML;
-                totalCartValue += parseFloat(val);
-              }
-  
-              this.totalCostFromChild.emit(totalCartValue);
-            }
+            this.updateCartDataInLocalVariable();
+            this.updateIndividualCost(data);
           }, (error) => {
             console.error(error);
           });
@@ -168,10 +159,22 @@ export class CardComponent implements OnInit {
         data.buttonStatus = this.getButtonStatus(data);
         data.buttonText = this.getButtonText(data);
       }
-        this.localStorageService.addToLocalStorage(data);
-        this.updateCartDataInLocalVariable();
-      // }
     }
+  }
+
+  updateCost(data) {
+    if(this.parentData[0].totalCost) {
+      this.updateIndividualCost(data);
+      this.updateTotalCost();
+    }
+  }
+
+  updateTotalCost() {
+    this.totalCostFromChild.emit(this.totalCost);
+  }
+
+  updateIndividualCost(data) {
+    document.getElementById('totalCostLabel-' + data.name).innerHTML = data.totalCost;
   }
 
   toggleButtonName(data) {
@@ -220,24 +223,23 @@ export class CardComponent implements OnInit {
   receiveMessage(event, data) {
     console.log(event);
     console.log({ data });
-    // this.childMessage = event;
-    // data.price = event;
-    if (this.parentData[0].customerName) {
+    console.log(JSON.stringify(this.cartData));
+    if (this.parentData[0].customerName) {//card is used in cart, so updating te quantity in the DB.
       this.addOrUpdateCart(data);
-    } else {
-      // if (this.localStorageService.vegetableAlreadyExists(data) && document.getElementById("btn-" + data.id).innerHTML == this.addToCartString) {
-      if ( this.itemExistsInCart(data) && document.getElementById("btn-" + data.name).innerHTML == this.addToCartString) {
-        // this.buttonName = this.updateCartString;//TODO : based on this button name change the create or update functionlaity.
+    } else if(this.itemExistsInCart(data)) {//card is not used in cart and it is already in the cart, so just changing the values.
+      if(event == data.quantity) {//quantity is same as cart, so defaulting the values.
+        this.disableButton(data); 
+        document.getElementById("btn-" + data.name).innerHTML = this.updateCartString;
+      } else { //card quantity is not same as cart, so changing the button properties.
+      if (document.getElementById("btn-" + data.name).innerHTML == this.addToCartString) {
         this.toggleButtonName(data);
         this.enableButton(data);
       }
-
-      // if (this.localStorageService.vegetableAlreadyExists(data) && document.getElementById("btn-" + data.id).innerHTML == this.updateCartString) {
-      if (this.itemExistsInCart(data) && document.getElementById("btn-" + data.name).innerHTML == this.updateCartString) {
-        // this.buttonName = this.updateCartString;//TODO : based on this button name change the create or update functionlaity.
+      if (document.getElementById("btn-" + data.name).innerHTML == this.updateCartString) {
         this.enableButton(data);
       }
     }
+  }
   }
 
 }

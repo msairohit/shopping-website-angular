@@ -3,6 +3,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CustomValidator } from '../custom-validator';
 import * as $ from "jquery";
+import { RestService } from '../rest.service';
 
 @Component({
   selector: 'app-step-test',
@@ -13,7 +14,7 @@ export class StepTestComponent implements OnInit {
 
   signUpForm: FormGroup;
 
-  constructor(private formBuilder: FormBuilder, private router: Router) { }
+  constructor(private formBuilder: FormBuilder, private router: Router, private restService : RestService) { }
 
   ngOnInit() {
 
@@ -170,8 +171,16 @@ export class StepTestComponent implements OnInit {
 
   onSubmit(value) {
     console.log(value);
-    localStorage.setItem("isUserLoggedIn", "true");
-    this.router.navigate(['vegetables']);
+    this.restService.post("http://localhost:8080/user/save", this.signUpForm.value).subscribe(
+      (data) => {
+        console.log(data);
+        alert('hurrey!!! \n proceed to login...')//TODO : change to login automatically by passing to parent that signup is done so that it can move to sign in.
+        // this.router.navigate(['vegetables']);
+      },
+      (error) => {
+        console.error(error);
+      }
+    );
   }
 
   isFormInValid() {

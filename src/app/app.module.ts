@@ -18,6 +18,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LoginSignupTestComponent } from './login-signup-test/login-signup-test.component';
 import { StepTestComponent } from './step-test/step-test.component';
 import { AppHeaderComponent } from './app-header/app-header.component';
+import { SignInComponent } from './sign-in/sign-in.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +33,8 @@ import { AppHeaderComponent } from './app-header/app-header.component';
     CartComponent,
     LoginSignupTestComponent,
     StepTestComponent,
-    AppHeaderComponent
+    AppHeaderComponent,
+    SignInComponent
   ],
   imports: [
     BrowserModule,

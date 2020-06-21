@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
 import { CustomValidator } from '../custom-validator';
 import { Router } from '@angular/router';
+import { RestService } from '../rest.service';
 
 @Component({
   selector: 'app-sign-up',
@@ -12,7 +13,7 @@ export class SignUpComponent implements OnInit {
 
   signUpForm: FormGroup;
 
-  constructor(private formBuilder: FormBuilder, private router: Router) { }
+  constructor(private formBuilder: FormBuilder, private router: Router, private restService : RestService) { }
 
   ngOnInit() {
     this.signUpForm = this.formBuilder.group({
@@ -60,7 +61,6 @@ export class SignUpComponent implements OnInit {
 
   onSubmit(value) {
     console.log(value);
-    this.router.navigate(['vegetables']);
   }
 
 }

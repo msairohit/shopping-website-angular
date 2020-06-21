@@ -15,6 +15,7 @@ export class ManageVegetablesComponent implements OnInit {
   vegetables;
   showTable : boolean = false;
   updateDisabled : boolean = true;
+  theCheckbox;
 
   constructor(private formBuilder: FormBuilder, private httpClient: HttpClient, private restService : RestService,
     private commonService : CommonService) { }

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CustomValidator } from '../custom-validator';
+import * as $ from "jquery";
 
 @Component({
   selector: 'app-step-test',

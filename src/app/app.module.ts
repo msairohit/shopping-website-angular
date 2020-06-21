@@ -16,6 +16,8 @@ import { CartComponent } from './cart/cart.component';
 import { NgxSpinnerModule } from "ngx-spinner";
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LoginSignupTestComponent } from './login-signup-test/login-signup-test.component';
+import { StepTestComponent } from './step-test/step-test.component';
+import { AppHeaderComponent } from './app-header/app-header.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +30,9 @@ import { LoginSignupTestComponent } from './login-signup-test/login-signup-test.
     CounterComponent,
     ManageVegetablesComponent,
     CartComponent,
-    LoginSignupTestComponent
+    LoginSignupTestComponent,
+    StepTestComponent,
+    AppHeaderComponent
   ],
   imports: [
     BrowserModule,

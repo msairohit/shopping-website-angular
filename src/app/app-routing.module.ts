@@ -7,17 +7,20 @@ import { VegetablesComponent } from './vegetables/vegetables.component';
 import { ManageVegetablesComponent } from './manage-vegetables/manage-vegetables.component';
 import { CartComponent } from './cart/cart.component';
 import { LoginSignupTestComponent } from './login-signup-test/login-signup-test.component';
+import { StepTestComponent } from './step-test/step-test.component';
+import { UserLoggedInGuardService } from './user-logged-in-guard.service';
 
 
 const routes: Routes = [
-  {path : '', redirectTo : '/home', pathMatch : 'full'},
+  {path : '', redirectTo : '/testLogin', pathMatch : 'full'},
   {path : 'home', component : HomeComponent},
   {path : 'test', component : TestComponent},
   {path : 'signUp', component : SignUpComponent},
-  {path : 'vegetables', component : VegetablesComponent},
-  {path : 'manage/vegetables', component : ManageVegetablesComponent},
-  {path : 'cart', component : CartComponent},
-  {path : 'testLogin', component : LoginSignupTestComponent}
+  {path : 'vegetables', component : VegetablesComponent, canActivate : [UserLoggedInGuardService]},
+  {path : 'manage/vegetables', component : ManageVegetablesComponent, canActivate : [UserLoggedInGuardService]},
+  {path : 'cart', component : CartComponent, canActivate : [UserLoggedInGuardService]},
+  {path : 'testLogin', component : LoginSignupTestComponent},
+  {path : 'step', component : StepTestComponent}
 ];
 
 @NgModule({

@@ -40,7 +40,7 @@ export class CardComponent implements OnInit {
     setTimeout(() => {
       this.myNgAfterViewInit();
       this.commonService.hideSpinner();
-    }, 1000);
+    }, 2000);
   }
 
   myNgAfterViewInit() {

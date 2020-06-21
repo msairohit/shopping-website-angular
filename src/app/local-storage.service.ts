@@ -9,6 +9,11 @@ export class LocalStorageService {
   //TODO: get login username and store in local storage.
   constructor() {
     localStorage.setItem("userName", "sai");
+    localStorage.setItem("isUserLoggedIn", "false");
+   }
+
+   isUserLoggedIn() {
+     return localStorage.getItem("isUserLoggedIn");
    }
 
    getUserName() {

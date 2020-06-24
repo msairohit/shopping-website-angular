@@ -8,13 +8,13 @@
                     <div class="input-group-prepend">
                         <span class="input-group-text" id="inputGroupPrepend3">Vegetable Name</span>
                     </div>
-                    <input type="text" class="form-control" formControlName="vegetableName" placeholder="Vegetable name"
-                        [ngClass]="{'is-invalid': isValid('vegetableName')}">
-                    <div *ngIf="isValid('vegetableName')" class="invalid-feedback">
-                        <div *ngIf="vegetablesForm.get('vegetableName').errors.required">
+                    <input type="text" class="form-control" formControlName="name" placeholder="Vegetable name"
+                        [ngClass]="{'is-invalid': isValid('name')}">
+                    <div *ngIf="isValid('name')" class="invalid-feedback">
+                        <div *ngIf="vegetablesForm.get('name').errors.required">
                             Vegetable Name is required.
                         </div>
-                        <div *ngIf="vegetablesForm.get('vegetableName').errors.minlength">
+                        <div *ngIf="vegetablesForm.get('name').errors.minlength">
                             Vegetable Name must be at least 3 characters long.
                         </div>
                     </div>

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { RestService } from '../rest.service';
 import { Router } from '@angular/router';
+import { CommonService } from '../common.service';
 
 @Component({
   selector: 'app-sign-in',
@@ -37,7 +38,7 @@ export class SignInComponent implements OnInit {
 
   onSubmit() {
     console.log(this.signInForm);
-    this.restService.get("http://localhost:8080/login/" + this.signInForm.value.userName + "/" + this.signInForm.value.password).subscribe(
+    this.restService.get(CommonService.BASE_URL+"login/" + this.signInForm.value.userName + "/" + this.signInForm.value.password).subscribe(
       (data) => {
         console.log(data);
         if (data == true) {

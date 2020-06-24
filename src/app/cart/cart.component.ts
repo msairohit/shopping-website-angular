@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { RestService } from '../rest.service';
 import { Cart } from '../cart';
 import { LocalStorageService } from '../local-storage.service';
+import { CommonService } from '../common.service';
 
 @Component({
   selector: 'app-cart',
@@ -18,7 +19,7 @@ export class CartComponent implements OnInit {
 
   ngOnInit() {
     this.allData = [];
-    this.restService.get("http://localhost:8080/cart/" + this.localStorageService.getUserName())
+    this.restService.get(CommonService.BASE_URL+"cart/" + this.localStorageService.getUserName())
       .subscribe(
         (data : any) => {
           console.log(data);

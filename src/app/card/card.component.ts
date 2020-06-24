@@ -46,7 +46,7 @@ export class CardComponent implements OnInit {
   myNgAfterViewInit() {
     this.commonService.showSpinner();
     var cartData: Cart[];
-    this.restService.get("http://localhost:8080/cart/" + this.localStorageService.getUserName())
+    this.restService.get(CommonService.BASE_URL+"cart/" + this.localStorageService.getUserName())
       .subscribe(
         (data: Cart[]) => {
           cartData = data;
@@ -75,7 +75,7 @@ export class CardComponent implements OnInit {
   }
 
   updateCartDataInLocalVariable () {
-    this.restService.get("http://localhost:8080/cart/" + this.localStorageService.getUserName()).subscribe(
+    this.restService.get(CommonService.BASE_URL+"cart/" + this.localStorageService.getUserName()).subscribe(
       (data : any) => {
         console.log(data);
         if(this.parentData[0].totalCost) {
@@ -98,7 +98,7 @@ export class CardComponent implements OnInit {
   removeItemFromCart(data) {
     //delete from db.
     console.log(data);
-    var url = "http://localhost:8080/cart/";
+    var url = CommonService.BASE_URL+"cart/";
     var uri = data.name;
     this.restService.delete(url + uri).subscribe(
       (data) => {
@@ -146,7 +146,7 @@ export class CardComponent implements OnInit {
         cart.costOfEachItem = data.price;
       }
 
-        this.restService.put("http://localhost:8080/cart", cart).subscribe(
+        this.restService.put(CommonService.BASE_URL+"cart", cart).subscribe(
           (data : any) => {
             console.log(data);
             this.updateCartDataInLocalVariable();

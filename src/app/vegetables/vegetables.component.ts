@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { Vegetable } from '../vegetable';
 import { RestService } from '../rest.service';
 import { CardComponent } from '../card/card.component';
+import { CommonService } from '../common.service';
 
 @Component({
   selector: 'app-vegetables',
@@ -18,7 +19,7 @@ export class VegetablesComponent implements OnInit {
   ngOnInit() {
     this.allData = [];
 
-    this.restService.get("http://localhost:8080/vegetables/getAll").subscribe(
+    this.restService.get(CommonService.BASE_URL+"vegetables/getAll").subscribe(
       (data) => {
         console.log(data);
         if(data) {

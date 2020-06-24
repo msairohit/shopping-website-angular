@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { CustomValidator } from '../custom-validator';
 import * as $ from "jquery";
 import { RestService } from '../rest.service';
+import { CommonService } from '../common.service';
 
 @Component({
   selector: 'app-step-test',
@@ -171,7 +172,7 @@ export class StepTestComponent implements OnInit {
 
   onSubmit(value) {
     console.log(value);
-    this.restService.post("http://localhost:8080/user/save", this.signUpForm.value).subscribe(
+    this.restService.post(CommonService.BASE_URL+"user/save", this.signUpForm.value).subscribe(
       (data) => {
         console.log(data);
         alert('hurrey!!! \n proceed to login...')//TODO : change to login automatically by passing to parent that signup is done so that it can move to sign in.

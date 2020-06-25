@@ -1,7 +1,6 @@
 import { Component, OnInit, Input, ViewChild, ViewChildren, QueryList, Output, EventEmitter } from '@angular/core';
 import { Vegetable } from '../vegetable';
 import { LocalStorageService } from '../local-storage.service';
-import { element } from 'protractor';
 import { CounterComponent } from '../counter/counter.component';
 import { RestService } from '../rest.service';
 import { Cart } from '../cart';

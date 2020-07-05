@@ -11,7 +11,7 @@
       <span>Password</span>
       <input type="password" />
     </label> -->
-    <app-sign-in></app-sign-in>
+    <app-sign-in [userNameFromParent] = "userNameFromSignUp"></app-sign-in>
     <!-- <p class="forgot-pass">Forgot password?</p> -->
     <!-- <button type="button" class="submit" (click) = "onSignIn()">Sign In</button> -->
     <!-- <button type="button" class="fb-btn">Connect with <span>facebook</span></button> -->
@@ -46,7 +46,7 @@
         <input type="password" />
       </label> -->
       <!-- <app-sign-up></app-sign-up> -->
-      <app-step-test></app-step-test>
+      <app-step-test (signUpDone) = "signUpDoneNavigateToSignIn($event)"></app-step-test>
       <!-- <button type="button" class="submit" (click) = "onSignUp()">Sign Up</button>
       <button type="button" class="fb-btn">Join with <span>facebook</span></button> -->
     </div>

@@ -7,7 +7,7 @@ app.use(express.static(__dirname + '/dist'));
 app.listen(process.env.PORT || 8080);
 
 app.get('/*', function(req, res) {
-    res.sendfile(path.join(__dirname + '/dist/index.html'));
+    res.sendFile(path.join(__dirname + '/dist/index.html'));
 })
 
-console.log('console listening from my app');
+console.log('console listening from my app' + 'https://www.youtube.com/watch?v=0bOJjAUXjhI');

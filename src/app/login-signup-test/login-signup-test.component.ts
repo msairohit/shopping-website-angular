@@ -7,6 +7,8 @@ import { Component, OnInit } from '@angular/core';
 })
 export class LoginSignupTestComponent implements OnInit {
 
+  userNameFromSignUp : String;
+
   constructor() { }
 
   ngOnInit() {
@@ -23,6 +25,12 @@ export class LoginSignupTestComponent implements OnInit {
     document.querySelector('.img__btn').addEventListener('click', function() {
       document.querySelector('.cont').classList.toggle('s--signup');
     });
+  }
+
+  signUpDoneNavigateToSignIn(data) {
+    console.log("signup done shifting to signin", data);
+    this.userNameFromSignUp = data;
+      document.querySelector('.cont').classList.toggle('s--signup');
   }
 
 

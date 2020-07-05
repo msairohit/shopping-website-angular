@@ -36,7 +36,7 @@ export class ManageVegetablesComponent implements OnInit {
     console.log(!this.vegetables);
       // this.showSpinner = true;
       this.commonService.showSpinner();
-    this.restService.get("https://shopping-website-back-end.herokuapp.com/vegetables/getAll").subscribe(
+    this.restService.get(CommonService.BASE_URL + "vegetables/getAll").subscribe(
       (data) => {
         console.log(data);
         if(data) {

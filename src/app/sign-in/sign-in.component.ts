@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, ChangeDetectorRef } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { RestService } from '../rest.service';
 import { Router } from '@angular/router';
@@ -12,7 +12,10 @@ import { CommonService } from '../common.service';
 export class SignInComponent implements OnInit {
 
   signInForm: FormGroup;
-  constructor(private formBuilder: FormBuilder, private restService: RestService, private router: Router) { }
+  @Input('userNameFromParent') userNameFromSignUp : String;
+  
+  constructor(private formBuilder: FormBuilder, private restService: RestService, private router: Router
+    ,private changeDetector : ChangeDetectorRef) { }
 
   ngOnInit() {
 
@@ -22,8 +25,11 @@ export class SignInComponent implements OnInit {
     });
   }
 
-  ngAfterViewInit() {
-
+  ngAfterViewChecked() {
+    if(this.userNameFromSignUp != undefined && this.userNameFromSignUp != "") {
+      this.signInForm.controls['userName'].setValue(this.userNameFromSignUp);
+    }
+    this.changeDetector.detectChanges();
   }
 
   isValid(formControlName) {

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CustomValidator } from '../custom-validator';
@@ -14,6 +14,8 @@ import { CommonService } from '../common.service';
 export class StepTestComponent implements OnInit {
 
   signUpForm: FormGroup;
+
+  @Output() signUpDone : EventEmitter<any> = new EventEmitter();
 
   constructor(private formBuilder: FormBuilder, private router: Router, private restService : RestService) { }
 
@@ -177,6 +179,7 @@ export class StepTestComponent implements OnInit {
         console.log(data);
         alert('hurrey!!! \n proceed to login...')//TODO : change to login automatically by passing to parent that signup is done so that it can move to sign in.
         // this.router.navigate(['vegetables']);
+        this.signUpDone.emit(this.signUpForm.value.userName);
       },
       (error) => {
         console.error(error);

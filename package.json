@@ -25,7 +25,7 @@
     "@angular/router": "~8.2.14",
     "@types/jquery": "^3.3.38",
     "bootstrap-icons": "^1.0.0-alpha4",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "jquery": "^3.5.1",
     "ngx-spinner": "^9.0.2",
     "rxjs": "~6.4.0",
